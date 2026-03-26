@@ -1,0 +1,7 @@
+# https://docs.netlify.com/build/frameworks/framework-setup-guides/react-router/
+[build]
+  command = "npm run build"
+  publish = "build/client"
+
+[build.environment]
+  NODE_VERSION = "22"
