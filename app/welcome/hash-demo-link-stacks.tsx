@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 import { Link } from "react-router";
 import { HashFocusLink } from "./hash-focus-link";
 import { RefFocusButton } from "./ref-focus-button";
+import { RefFocusManualButton } from "./ref-focus-manual-button";
 import { RefFocusLink } from "./ref-focus-link";
 
 const stackClassName =
@@ -24,18 +25,21 @@ export function HashLinksToBottom({
         Bottom Link
       </Link>
       <HashFocusLink to="#bottom" className={itemClassName}>
-        Bottom Link Modified
+        Bottom Link Modified to Focus
       </HashFocusLink>
       <RefFocusLink
         to="#bottom"
         focusRef={bottomTargetRef}
         className={itemClassName}
       >
-        Bottom RefFocusLink (RR navigate)
+        Bottom Link Modified to Focus using Ref
       </RefFocusLink>
       <RefFocusButton focusRef={bottomTargetRef} className={itemClassName}>
-        Bottom RefFocusButton (scroll only)
+        Bottom Button that focuses and scrolls using scrollIntoView
       </RefFocusButton>
+      <RefFocusManualButton focusRef={bottomTargetRef} className={itemClassName}>
+        Bottom Button that focuses and scrolls using window.scrollTo
+      </RefFocusManualButton>
     </div>
   );
 }
@@ -54,18 +58,21 @@ export function HashLinksToTop({
         Top Link
       </Link>
       <HashFocusLink to="#top" className={itemClassName}>
-        Top Link Modified
+        Top Link Modified to Focus
       </HashFocusLink>
       <RefFocusLink
         to="#top"
         focusRef={topTargetRef}
         className={itemClassName}
       >
-        Top RefFocusLink (RR navigate)
+        Top Link Modified to Focus using Ref
       </RefFocusLink>
       <RefFocusButton focusRef={topTargetRef} className={itemClassName}>
-        Top RefFocusButton (scroll only)
+        Top Button that focuses and scrolls using scrollIntoView
       </RefFocusButton>
+      <RefFocusManualButton focusRef={topTargetRef} className={itemClassName}>
+        Top Button that focuses and scrolls using window.scrollTo
+      </RefFocusManualButton>
     </div>
   );
 }

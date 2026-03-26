@@ -47,9 +47,7 @@ function scheduleFocusHashTarget(hash: string) {
       );
     }
   };
-  requestAnimationFrame(() => {
-    requestAnimationFrame(run);
-  });
+  requestAnimationFrame(run);
 }
 
 /**

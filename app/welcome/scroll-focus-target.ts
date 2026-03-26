@@ -15,6 +15,49 @@ function scrollBehaviorForRequest(smoothRequested: boolean): ScrollBehavior {
   return smoothRequested ? "smooth" : "auto";
 }
 
+function applyFocusToTarget(el: HTMLElement) {
+  const hadTabIndex = el.hasAttribute("tabindex");
+  if (!hadTabIndex) {
+    el.setAttribute("tabindex", "-1");
+  }
+  el.focus({ preventScroll: true });
+  if (!hadTabIndex) {
+    el.addEventListener(
+      "blur",
+      () => {
+        el.removeAttribute("tabindex");
+      },
+      { once: true },
+    );
+  }
+}
+
+/**
+ * Aligns the element’s top edge with the top of the viewport by setting window scroll
+ * (no `scrollIntoView`). Assumes the page scrolls on the window; nested scroll containers
+ * are not walked.
+ */
+function scrollWindowToElementTop(el: HTMLElement) {
+  const rect = el.getBoundingClientRect();
+  const documentY = window.scrollY + rect.top;
+  window.scrollTo({ left: window.scrollX, top: documentY, behavior: "auto" });
+}
+
+/**
+ * Manual `window.scrollTo` + focus, run **synchronously** in the click turn (no
+ * double rAF). Deferred scrolling left a window where the activating control
+ * could still be focused; the UA then scrolled it back into view (often smooth).
+ */
+export function scheduleManualScrollAndFocus(
+  focusRef: RefObject<Element | null>,
+) {
+  const el = focusRef.current;
+  if (!(el instanceof HTMLElement)) return;
+
+  scrollWindowToElementTop(el);
+  applyFocusToTarget(el);
+}
+
 /** Double rAF scroll + focus pattern shared by ref-based demo controls. */
 export function scheduleScrollAndFocus(
   focusRef: RefObject<Element | null>,
@@ -30,23 +73,7 @@ export function scheduleScrollAndFocus(
       block: "start",
       behavior: scrollBehaviorForRequest(smoothRequested),
     });
-
-    const hadTabIndex = el.hasAttribute("tabindex");
-    if (!hadTabIndex) {
-      el.setAttribute("tabindex", "-1");
-    }
-    el.focus({ preventScroll: true });
-    if (!hadTabIndex) {
-      el.addEventListener(
-        "blur",
-        () => {
-          el.removeAttribute("tabindex");
-        },
-        { once: true },
-      );
-    }
+    applyFocusToTarget(el);
   };
-  requestAnimationFrame(() => {
-    requestAnimationFrame(run);
-  });
+  requestAnimationFrame(run);
 }
