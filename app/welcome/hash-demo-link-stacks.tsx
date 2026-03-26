@@ -1,10 +1,11 @@
 import type { RefObject } from "react";
 import { Link } from "react-router";
 import { HashFocusLink } from "./hash-focus-link";
+import { RefFocusButton } from "./ref-focus-button";
 import { RefFocusLink } from "./ref-focus-link";
 
 const stackClassName =
-  "flex w-full max-w-md flex-col items-center gap-2 text-sm";
+  "flex w-full max-w-md flex-col items-center gap-4 text-sm";
 
 const itemClassName =
   "text-center text-blue-600 underline underline-offset-2 hover:no-underline dark:text-blue-400";
@@ -30,8 +31,11 @@ export function HashLinksToBottom({
         focusRef={bottomTargetRef}
         className={itemClassName}
       >
-        Bottom Custom Component
+        Bottom RefFocusLink (RR navigate)
       </RefFocusLink>
+      <RefFocusButton focusRef={bottomTargetRef} className={itemClassName}>
+        Bottom RefFocusButton (scroll only)
+      </RefFocusButton>
     </div>
   );
 }
@@ -57,8 +61,11 @@ export function HashLinksToTop({
         focusRef={topTargetRef}
         className={itemClassName}
       >
-        Top Custom Component
+        Top RefFocusLink (RR navigate)
       </RefFocusLink>
+      <RefFocusButton focusRef={topTargetRef} className={itemClassName}>
+        Top RefFocusButton (scroll only)
+      </RefFocusButton>
     </div>
   );
 }

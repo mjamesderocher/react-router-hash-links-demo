@@ -7,6 +7,7 @@ import {
   useNavigate,
   useResolvedPath,
 } from "react-router";
+import { scheduleScrollAndFocus } from "./scroll-focus-target";
 
 const ABSOLUTE_URL_REGEX = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 
@@ -26,45 +27,17 @@ function shouldProcessLinkClick(
   );
 }
 
-function scheduleScrollAndFocus(focusRef: RefObject<Element | null>) {
-  const run = () => {
-    const el = focusRef.current;
-    if (!(el instanceof HTMLElement)) return;
-
-    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)")
-      .matches;
-    el.scrollIntoView({
-      block: "start",
-      behavior: smooth ? "smooth" : "auto",
-    });
-
-    const hadTabIndex = el.hasAttribute("tabindex");
-    if (!hadTabIndex) {
-      el.setAttribute("tabindex", "-1");
-    }
-    el.focus({ preventScroll: true });
-    if (!hadTabIndex) {
-      el.addEventListener(
-        "blur",
-        () => {
-          el.removeAttribute("tabindex");
-        },
-        { once: true },
-      );
-    }
-  };
-  requestAnimationFrame(() => {
-    requestAnimationFrame(run);
-  });
-}
-
 export type RefFocusLinkProps = LinkProps & {
   /** Element to scroll into view and focus (attach this ref to the target). */
   focusRef: RefObject<Element | null>;
+  /**
+   * Request smooth scroll; ignored when `prefers-reduced-motion: reduce` (defaults to false).
+   */
+  smoothScroll?: boolean;
 };
 
 /**
- * In-app navigation without `Link`: updates the URL via `navigate`, then scrolls and focuses
+ * In-app navigation with `Link`-style URL updates via `navigate`, then scrolls and focuses
  * `focusRef.current` so behavior is consistent for mouse and keyboard (activation uses `click`).
  */
 export const RefFocusLink = forwardRef<HTMLAnchorElement, RefFocusLinkProps>(
@@ -72,6 +45,7 @@ export const RefFocusLink = forwardRef<HTMLAnchorElement, RefFocusLinkProps>(
     const {
       to,
       focusRef,
+      smoothScroll = false,
       onClick,
       discover: _discover,
       prefetch: _prefetch,
@@ -120,11 +94,12 @@ export const RefFocusLink = forwardRef<HTMLAnchorElement, RefFocusLinkProps>(
           relative,
           viewTransition,
         });
-        scheduleScrollAndFocus(focusRef);
+        scheduleScrollAndFocus(focusRef, { smoothScroll });
       },
       [
         focusRef,
         isAbsolute,
+        smoothScroll,
         location,
         navigate,
         onClick,

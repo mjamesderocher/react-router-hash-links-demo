@@ -10,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function SimpleRoute() {
   return (
-    <main className="flex items-center justify-center pt-16 pb-4 scroll-smooth">
+    <main className="flex items-center justify-center pt-16 pb-4">
       <div className="flex min-h-0 flex-1 flex-col items-center gap-16">
         <SimpleHashDemo />
       </div>

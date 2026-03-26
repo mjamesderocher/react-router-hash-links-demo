@@ -18,19 +18,8 @@ export function SimpleHashDemo() {
         className="flex flex-col items-center gap-9"
         id="top"
       >
-        <p className="max-w-md text-center text-sm text-gray-600 dark:text-gray-400">
-          Minimal page for Safari / hash / scroll debugging — no chaos timers or
-          heavy widgets.
-        </p>
         <HashLinksToBottom bottomTargetRef={bottomTargetRef} />
       </header>
-
-      <div className="flex w-full max-w-3xl flex-col gap-4 px-4 pb-8">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Static filler between anchors (no re-rendering stress).
-        </p>
-      </div>
-
       <div className="h-[800px]" />
       <div ref={bottomTargetRef} id="bottom" className="pb-[200px]">
         <HashLinksToTop topTargetRef={topTargetRef} />
